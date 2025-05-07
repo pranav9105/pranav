@@ -1,56 +1,130 @@
-/*Write a function template for selection sort that inputs, 
-sorts and outputs an integer array and a float array.*/
-#include<iostream>
-using namespace std;
-int n;
-#define size 10
+def selection_sort(arr):
+    """
+    Sort an array using Selection Sort algorithm
+    
+    Args:
+        arr: List of floating point numbers
+    
+    Returns:
+        Sorted array in ascending order
+    """
+    n = len(arr)
+    
+    # Traverse through all array elements
+    for i in range(n):
+        # Find the minimum element in the unsorted part of array
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        
+        # Swap the found minimum element with the element at index i
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    
+    return arr
 
-template<class T>
 
-void sel(T A[size])
-{
-    int i,j,min;
-    T temp;
-    for(i=0;i<n-1;i++)
-    {
-        min=i;
-        for(j=i+1;j<n;j++)
-        {
-            if(A[j]<A[min])
-            min=j;
-        }
-        temp=A[i];
-        A[i]=A[min];
-        A[min]=temp;
-    }
-    cout<<"\nSorted array:";
-    for(i=0;i<n;i++)
-    {
-        cout<<" "<<A[i];
-    }
-}
+def bubble_sort(arr):
+    """
+    Sort an array using Bubble Sort algorithm
+    
+    Args:
+        arr: List of floating point numbers
+    
+    Returns:
+        Sorted array in ascending order
+    """
+    n = len(arr)
+    
+    # Traverse through all array elements
+    for i in range(n):
+        # Flag to optimize if no swapping occurs
+        swapped = False
+        
+        # Last i elements are already in place
+        for j in range(0, n - i - 1):
+            # Traverse the array from 0 to n-i-1
+            # Swap if the element found is greater than the next element
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        
+        # If no swapping occurred in this pass, array is sorted
+        if not swapped:
+            break
+    
+    return arr
 
-int main()
-{
-    int A[size];
-    float B[size];
-    int i;
-   
-    cout<<"\nEnter total no of int elements:";
-    cin>>n;
-    cout<<"\nEnter int elements:";
-    for(i=0;i<n;i++)
-    {
-        cin>>A[i];
-    }
-    sel(A);
-   
-    cout<<"\nEnter total no of float elements:";
-    cin>>n;
-    cout<<"\nEnter float elements:";
-    for(i=0;i<n;i++)
-    {
-        cin>>B[i];
-    }
-    sel(B);
-}
+
+def display_top_five(arr):
+    """
+    Display top five scores from the sorted array
+    
+    Args:
+        arr: Sorted array in ascending order
+    """
+    n = len(arr)
+    print("\nTop Five Scores:")
+    
+    # Check if array has at least 5 elements
+    if n < 5:
+        print("Not enough scores to display top five. Displaying all available scores:")
+        for i in range(n-1, -1, -1):
+            print(f"{n-i}. {arr[i]:.2f}%")
+    else:
+        # Display top 5 scores (highest to lowest)
+        for i in range(n-1, n-6, -1):
+            print(f"{n-i}. {arr[i]:.2f}%")
+
+
+def main():
+    # Get the number of students
+    try:
+        n = int(input("Enter the number of students: "))
+        if n <= 0:
+            print("Number of students must be positive!")
+            return
+    except ValueError:
+        print("Please enter a valid number!")
+        return
+    
+    # Get percentage for each student
+    percentages = []
+    for i in range(n):
+        try:
+            percentage = float(input(f"Enter percentage for student {i+1}: "))
+            if 0 <= percentage <= 100:
+                percentages.append(percentage)
+            else:
+                print("Percentage should be between 0 and 100!")
+                return
+        except ValueError:
+            print("Please enter a valid percentage!")
+            return
+    
+    # Display original array
+    print("\nOriginal Percentages:", [f"{p:.2f}%" for p in percentages])
+    
+    # Create a copy for each sorting method
+    selection_arr = percentages.copy()
+    bubble_arr = percentages.copy()
+    
+    # Sort using Selection Sort
+    print("\nSorting using Selection Sort...")
+    selection_sorted = selection_sort(selection_arr)
+    print("Sorted Percentages:", [f"{p:.2f}%" for p in selection_sorted])
+    
+    # Display top five scores after Selection Sort
+    display_top_five(selection_sorted)
+    
+    # Sort using Bubble Sort
+    print("\nSorting using Bubble Sort...")
+    bubble_sorted = bubble_sort(bubble_arr)
+    print("Sorted Percentages:", [f"{p:.2f}%" for p in bubble_sorted])
+    
+    # Display top five scores after Bubble Sort
+    display_top_five(bubble_sorted)
+
+
+if __name__ == "__main__":
+    main()
