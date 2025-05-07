@@ -1,69 +1,127 @@
-/*Write C++ program using STL for sorting and searching user defined records 
-such as personal records (Name, DOB, Telephone number etc) using vector container.*/
-#include <iostream>
-#include <algorithm>
-using namespace std;
-
-class person
-{
-    public:
-    string name;
-    string dob;
-    long tel;
-
-    void getdata()
-    {
-        cout<<"ENTER NAME: "<<endl;
-        cin>>name;
-        cout<<"ENTER BIRTHDATE: "<<endl;
-        cin>>dob;
-        cout<<"ENTER PHONE NUMBER: "<<endl;
-        cin>>tel;
-    }
-    void displaydata()
-    {
-        cout<<"\nNAME :-"<<name<<endl;
-        cout<<"DATE OF BIRTH:-"<<dob<<endl;
-        cout<<"TELEPHONE :-"<<tel<<endl;
-    }
-};
-
-bool compare(const person & a, const person & b)
-{
-    return a.name < b.name;
-}
-
-int main()
-{
-    int n,c;
-    cout<<"ENTER TOTAL NUMBER OF RECORDS :-";
-    cin>>n;
-    string z[n];
-    person p[n];
-    for(int i=0;i<n;i++)
-    {
-        p[i].getdata();
-    }
-   
-    cout<<"*****SORTED RECORD******"<<endl;
-    sort(p, p+n, compare);
-    for(int i=0;i<n;i++)
-    {
-        p[i].displaydata();
-    }
-    cout<<endl;
+def quick_sort(arr, start=0, end=None):
+    """
+    Sort an array using Quick Sort algorithm
     
-    string nm;
-    cout<<"ENTER NAME TO BE SEARCH: ";
-    cin>>nm;
-    for(int i=0;i<n;i++)
-    {
-        z[i]=p[i].name;
-    }
+    Args:
+        arr: List of floating point numbers
+        start: Starting index of the array portion to sort
+        end: Ending index of the array portion to sort
     
-    if(binary_search(z, z+n, nm))
-    {
-        cout<<"****RECORD FOUND****";
-    }
-    else cout<<"****RECORD NOT FOUND****";
-}
+    Returns:
+        Sorted array in ascending order
+    """
+    if end is None:
+        end = len(arr) - 1
+    
+    # Base case: if the portion has 1 or 0 elements, it's already sorted
+    if start >= end:
+        return arr
+    
+    # Partition the array and get the pivot position
+    pivot_idx = partition(arr, start, end)
+    
+    # Recursively sort the left portion
+    quick_sort(arr, start, pivot_idx - 1)
+    
+    # Recursively sort the right portion
+    quick_sort(arr, pivot_idx + 1, end)
+    
+    return arr
+
+
+def partition(arr, start, end):
+    """
+    Partition the array around a pivot element
+    
+    Args:
+        arr: List of floating point numbers
+        start: Starting index of the array portion
+        end: Ending index of the array portion
+    
+    Returns:
+        Final position of the pivot element
+    """
+    # Choose the rightmost element as the pivot
+    pivot = arr[end]
+    
+    # Index of the smaller element
+    i = start - 1
+    
+    # Traverse through all elements
+    for j in range(start, end):
+        # If current element is smaller than or equal to pivot
+        if arr[j] <= pivot:
+            # Increment index of smaller element
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+    
+    # Place the pivot element at its correct position
+    arr[i + 1], arr[end] = arr[end], arr[i + 1]
+    
+    # Return the position of the pivot
+    return i + 1
+
+
+def display_top_five(arr):
+    """
+    Display top five scores from the sorted array
+    
+    Args:
+        arr: Sorted array in ascending order
+    """
+    n = len(arr)
+    print("\nTop Five Scores:")
+    
+    # Check if array has at least 5 elements
+    if n < 5:
+        print("Not enough scores to display top five. Displaying all available scores:")
+        for i in range(n-1, -1, -1):
+            print(f"{n-i}. {arr[i]:.2f}%")
+    else:
+        # Display top 5 scores (highest to lowest)
+        for i in range(n-1, n-6, -1):
+            print(f"{n-i}. {arr[i]:.2f}%")
+
+
+def main():
+    # Get the number of students
+    try:
+        n = int(input("Enter the number of students: "))
+        if n <= 0:
+            print("Number of students must be positive!")
+            return
+    except ValueError:
+        print("Please enter a valid number!")
+        return
+    
+    # Get percentage for each student
+    percentages = []
+    for i in range(n):
+        try:
+            percentage = float(input(f"Enter percentage for student {i+1}: "))
+            if 0 <= percentage <= 100:
+                percentages.append(percentage)
+            else:
+                print("Percentage should be between 0 and 100!")
+                return
+        except ValueError:
+            print("Please enter a valid percentage!")
+            return
+    
+    # Display original array
+    print("\nOriginal Percentages:", [f"{p:.2f}%" for p in percentages])
+    
+    # Create a copy for sorting
+    quick_arr = percentages.copy()
+    
+    # Sort using Quick Sort
+    print("\nSorting using Quick Sort...")
+    quick_sorted = quick_sort(quick_arr)
+    print("Sorted Percentages:", [f"{p:.2f}%" for p in quick_sorted])
+    
+    # Display top five scores after Quick Sort
+    display_top_five(quick_sorted)
+
+
+if __name__ == "__main__":
+    main()
